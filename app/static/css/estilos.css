@@ -1,0 +1,193 @@
+:root {
+  --blue: #2a3bd6;
+  --blue-dark: #1b27a3;
+  --sun: #ffd23f;
+  --paper: #f6f7ff;
+  --ink: #141a3c;
+  --muted: #5b6188;
+  --line: #d5d8ee;
+  --error: #c62f4a;
+
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Figtree", "Segoe UI", system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+/*Estructura general*/
+
+.login {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+}
+.login .central {
+    display: none;
+}
+
+.login .central.activo {
+    display: flex;
+    justify-content: center;
+}
+/*Columna izquierda*/
+.intro {
+  background: var(--blue);
+  color: #fff;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+.brand {
+  margin: 0;
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.bienvenida {
+  max-width: 34rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+}
+
+.intro h1 {
+  margin: 0 0 1rem;
+  font-weight: 800;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.texto-inferior {
+  margin: 0 0 2.5rem;
+  font-size: 1.125rem;
+  max-width: 28rem;
+}
+
+/*Columna derecha*/
+.central {
+  display: grid;
+  place-items: center;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.formulario {
+  width: 100%;
+  max-width: 24rem;
+}
+.formulario h2 {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.datos {
+  margin-bottom: 1.25rem;
+}
+
+.datos label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.datos input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+  border: 2px solid var(--line);
+  border-radius: 0.75rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/*Mantener la sesion iniciada*/
+
+.mantener-sesion {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+.check input {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin: 0;
+}
+
+a {
+  color: var(--blue);
+  font-weight: 600;
+}
+a:hover {
+  color: var(--blue-dark);
+}
+
+/*Boton central*/
+.btn {
+  width: 100%;
+  padding: 15px;
+  font-weight: 600;
+  font-size: 20px;
+  color: white;
+  background: #8b98ff;
+  border: 2px solid #7f86e2;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+.btn:hover {
+  background-color: #4255ff;
+  border: 2px solid #4b55e4;
+}
+
+.crear {
+  margin: 10px;
+  text-align: center;
+  color: var(--muted);
+}
+
+/*Distribucion responsive*/
+@media (max-width: 52rem) {
+  .login {
+    grid-template-columns: 1fr;
+  }
+
+  .intro {
+    gap: 1.5rem;
+  }
+}

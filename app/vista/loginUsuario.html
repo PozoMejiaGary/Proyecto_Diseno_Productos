@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/app/static/css/estilos.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <main class="login">
+        <section class="intro" aria-labelledby="intro-title">
+            <p class="brand">Impulso</p>
+            <div class="bienvenida">
+                <h1>Aprende lo que las empresas buscan en su próximo equipo.</h1>
+                <p class="texto-inferior">Cursos cortos, con práctica real y certificado al terminar.</p>
+            </div>
+        </section>
+
+        <!--Inicio de sesion-->
+        <section class="central activo" aria-labelledby="form-title" id="acceso">
+            <form class="formulario" action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <h2>Ingresa a tu cuenta</h2>
+
+                <div class="datos">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" name="email" autocomplete="email" placeholder="nombre@correo.com"
+                        required>
+                </div>
+                <div class="datos">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" autocomplete="current-password" minlength="8"
+                        required>
+                </div>
+
+                <div class="mantener-sesion">
+                    <label class="check">
+                        <input type="checkbox" name="remember">
+                        <span>Mantener sesión iniciada</span>
+                    </label>
+                    <a href="">Olvidé mi contraseña</a>
+                </div>
+
+                <button type="submit" class="btn">Ingresar</button>
+
+                <p class="crear">¿No tienes una cuenta? <a href="" id="btn-login">Crear mi cuenta</a></p>
+            </form>
+        </section>
+
+        <!--Registro-->
+        <section class="central" aria-labelledby="form-title" id="registro">
+            <form class="formulario" action="{% url 'registro' %}" method="post">
+                {% csrf_token %}
+                <h2>Crea tu cuenta</h2>
+
+                <div class="datos">
+                    <label for="nombres">Nombres</label>
+                    <input type="text" id="nombres" name="nombres" required>
+                </div>
+                <div class="datos">
+                    <label for="apellidos">Apellidos</label>
+                    <input type="text" id="apellidos" name="apellidos" required>
+                </div>
+                <div class="datos">
+                    <label for="dni">DNI</label>
+                    <input type="text" id="dni" name="dni" minlength="8" required>
+                </div>
+                <div class="datos">
+                    <label for="telefono">Telefono</label>
+                    <input type="tel" id="telefono" name="telefono" minlength="9" required>
+                </div>
+                <div class="datos">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="correo" name="email" placeholder="nombre@correo.com" required>
+                </div>
+                <div class="datos">
+                    <label for="contraseña">Contraseña</label>
+                    <input type="password" id="contrasena" name="password" minlength="8" required>
+                </div>
+
+                <div class="mantener-sesion">
+                    <label class="check">
+                        <input type="checkbox" name="terminos" required>
+                        <span>Acepto el acuerdo de <a href="">Terminos y condiciones</a></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn">Registrarme</button>
+
+                <p class="crear">¿Ya tienes una cuenta? <a href="#" id="btn-registro">Inicia sesion</a></p>
+            </form>
+        </section>
+
+    </main>
+    
+    <script src="/app/static/js/registro.js"></script>
+</body>
+</html>
