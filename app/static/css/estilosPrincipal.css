@@ -1,0 +1,231 @@
+:root {
+  --azul: #1B2D6B;
+  --azul-oscuro: #14214F;
+  --amarillo: #F5C518;
+  --amarillo-hover: #E3B50E;
+  --fondo: #EEF4FD;
+  --blanco: #FFFFFF;
+  --texto: #1B2A5E;
+  --texto-suave: #6B7A99;
+  --verde: #1FA38A;
+  --coral: #EF5B45;
+  --borde: #DCE5F5;
+}
+
+body {
+  font-family: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--fondo);
+  color: var(--texto);
+}
+
+h1, h2, h3 { 
+    font-family: "Fraunces", Georgia, serif; 
+    color: var(--azul); 
+    font-weight: 700; 
+}
+
+html { 
+    scroll-behavior: smooth; 
+    scroll-padding-top: 5rem; 
+}
+
+/*header*/
+.barra-navegacion {
+  background: var(--azul);
+  padding: .7rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .15);
+}
+.marca {
+  display: inline-flex; 
+  align-items: center; 
+  gap: .6rem;
+  color: var(--azul); 
+  letter-spacing: .03em; 
+}
+
+.marca-logo {
+  background: var(--amarillo); 
+  width: 180px; 
+  height: 40px; 
+  border-radius: .5rem;
+  display: grid; 
+  place-items: center; 
+  font-weight: 700; 
+}
+
+.nav-link {
+  color: #fff; 
+  padding: .5rem .9rem; 
+  border-bottom: 2px solid transparent;
+}
+.nav-link:hover, .nav-link:focus { 
+    color: var(--amarillo); 
+    border-bottom: 1px solid var(--amarillo) !important;
+    display: inline-block
+}
+
+.usuario { 
+    color: #fff; 
+}
+
+.usuario-toggle {
+  background: transparent;
+  border: 0;
+  color: #fff;
+  padding: .3rem .5rem;
+  border-radius: .4rem;
+  line-height: 1;
+}
+.usuario-toggle:hover,
+.usuario-toggle:focus,
+.usuario-toggle[aria-expanded="true"] {
+  background: rgba(255, 255, 255, .12);
+  color: var(--amarillo);
+}
+
+.btn-sesion {
+    background: var(--amarillo);
+    color: var(--azul);
+}
+.btn-sesion:hover{
+    background: #b18b01;
+    color: #fff;
+}
+
+/*main*/
+.fondo {
+  background-image: url('/app/static/img/fondo\ capa.webp'); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  
+}
+
+.fondo::before {
+  content: ""; 
+  position: absolute; 
+  top: -140px; 
+  right: -120px;
+  width: 520px; 
+  height: 520px; 
+  z-index: 0;
+  background: radial-gradient(circle, rgba(245, 197, 24, .28), transparent 65%);
+}
+.fondo .container { 
+    position: relative; 
+    z-index: 1; 
+}
+ 
+.fondo-etiqueta {
+  display: inline-block; 
+  background: #fff; 
+  border: 1px solid var(--borde);
+  color: var(--azul); 
+  font-size: .8rem; 
+  font-weight: 600;
+  padding: .35rem .85rem; 
+  border-radius: 999px;
+}
+.fondo h1 { 
+    font-size: clamp(2rem, 4.2vw, 3.2rem); 
+    line-height: 1.12; 
+    margin: 1.1rem 0; 
+}
+
+.resaltado { 
+    background: linear-gradient(transparent 62%, var(--amarillo) 62%); 
+}
+.fondo .lead { 
+    color: var(--blanco);
+}
+
+.seccion { 
+    padding: 4.5rem 0; 
+}
+.seccion-titulo { 
+    font-size: clamp(1.6rem, 3vw, 2.1rem); 
+    margin-bottom: .4rem; 
+    text-align: center;
+}
+.seccion-sub { 
+    color: var(--texto-suave); 
+    margin-bottom: 2.2rem; 
+    text-align: center;
+}
+
+.paso {
+  position: relative; 
+  background: #d0dff7; 
+  border-radius: 1rem;
+  padding: 2rem 1.5rem 1.6rem; 
+  height: 100%;
+}
+.numero {
+  position: absolute; 
+  top: -1rem; 
+  left: 1.4rem;
+  display: grid; 
+  place-items: center; 
+  width: 2.2rem; 
+  height: 2.2rem;
+  border-radius: 50%; 
+  background: var(--amarillo); 
+  color: var(--azul); 
+  font-weight: 700;
+}
+.paso h3 { 
+    font-family: "Outfit", sans-serif; 
+    font-size: 1.1rem; 
+    font-weight: 600; 
+    margin: .7rem 0 .4rem; 
+}
+.paso p { 
+    color: var(--texto-suave); 
+    margin: 0; 
+    font-size: .93rem; 
+}
+
+.tarjeta {
+  background: #fff; 
+  border-radius: 15px; 
+  padding: 15px;
+  text-align: center;
+  height: 100%;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.tarjeta:hover { 
+    transform: translateY(-4px); 
+}
+.tarjeta i { 
+    font-size: 1.9rem; 
+    color: var(--azul); 
+}
+.tarjeta h3 {  
+    font-size: 1rem; 
+    font-weight: 600; 
+    margin: .6rem 0 .3rem; 
+}
+.tarjeta p { 
+    color: var(--texto-suave);   
+}
+
+/*footer*/
+.pie { 
+    background: var(--azul-oscuro); 
+    color: rgba(255, 255, 255, .8); 
+    padding: 1.8rem 0; 
+}
+
+.marca-footer {
+  background: var(--amarillo); 
+  width: 40px; 
+  height: 40px; 
+  border-radius: .5rem;
+  display: grid; 
+  place-items: center; 
+  font-weight: 700; 
+}

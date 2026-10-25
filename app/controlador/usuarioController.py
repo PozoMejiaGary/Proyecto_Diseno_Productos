@@ -3,6 +3,7 @@ import re
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 
 from app.modelo.usuario import Usuario
@@ -33,23 +34,26 @@ def _validar_registro(d: dict) -> list:
 def login_vista(request):
     if request.user.is_authenticated:
         return redirect("principal")
-
+ 
     if request.method == "POST":
         email = request.POST.get("email", "").strip().lower()
         password = request.POST.get("password", "")
-
+ 
         usuario = UsuarioDAO.buscar_por_email(email)
         if usuario is None or not usuario.check_password(password):
-            # Mismo mensaje en ambos casos para no revelar qué correos existen
             contexto = {"errores": ["Correo o contraseña incorrectos."]}
             return render(request, PLANTILLA, contexto, status=401)
-
+ 
         login(request, usuario)
         if not request.POST.get("remember"):
-            request.session.set_expiry(0)  # la sesión termina al cerrar el navegador
+            request.session.set_expiry(0)
         return redirect("principal")
-
-    return render(request, PLANTILLA, {"registrado": request.GET.get("registrado")})
+ 
+    contexto = {
+        "registrado": request.GET.get("registrado"),
+        "mostrar_registro": request.GET.get("registro"),
+    }
+    return render(request, PLANTILLA, contexto)
 
 
 def registro_vista(request):
@@ -78,7 +82,7 @@ def registro_vista(request):
         telefono=datos["telefono"],
         email=datos["email"],
     )
-    usuario.set_password(datos["password"])  # guarda el hash, nunca el texto plano
+    usuario.set_password(datos["password"]) 
 
     try:
         UsuarioDAO.guardar(usuario)
@@ -89,11 +93,12 @@ def registro_vista(request):
 
     return redirect("/?registrado=1")
 
-
-@login_required
 def principal_vista(request):
     return render(request, "paginaPrincipal.html")
 
+@login_required
+def perfil_vista(request):
+    return render(request, "perfilUsuario.html")
 
 @require_POST
 def salir_vista(request):
