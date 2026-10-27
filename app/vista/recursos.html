@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Recursos para tu desarrollo - Capacítate+</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar-custom { background-color: #1a2332; }
+        .text-primary-custom { color: #1a2332; font-weight: 800; }
+        .btn-yellow { background-color: #ffc107; color: #1a2332; font-weight: 700; border-radius: 8px; }
+        .btn-yellow:hover { background-color: #ffca2c; color: #1a2332; }
+        
+        /* Pestañas de categorías superiores */
+        .nav-categorias .nav-link { color: #6c757d; font-weight: 600; border: none; padding: 10px 20px; }
+        .nav-categorias .nav-link.active { color: #1a2332; background: none; border-bottom: 3px solid #ffc107; }
+
+        /* Tarjeta Destacada */
+        .card-destacada { border: none; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); background: #ffffff; }
+        .img-placeholder { background-color: #e9ecef; border: 2px dashed #ced4da; border-radius: 12px; height: 100%; min-height: 220px; display: flex; align-items: center; justify-content: center; color: #6c757d; font-size: 14px; }
+
+        /* Tarjetas de recursos de la cuadrícula */
+        .card-recurso { border: none; border-radius: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: transform 0.2s; background: #ffffff; overflow: hidden; }
+        .card-recurso:hover { transform: translateY(-4px); box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
+        .card-img-top-placeholder { background-color: #eef2f7; height: 140px; display: flex; align-items: center; justify-content: center; color: #adb5bd; border-bottom: 1px solid #e2e8f0; }
+        
+        .badge-tipo { font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 700; background-color: #1a2332; color: #fff; }
+        .btn-outline-custom { border-color: #1a2332; color: #1a2332; border-radius: 20px; font-weight: 600; }
+        .btn-outline-custom:hover { background-color: #1a2332; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <!-- Menú Superior con los colores exactos -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom px-4 py-3">
+        <a class="navbar-brand fw-bold text-dark px-3 py-1 rounded" style="background-color: #ffc107;" href="#">Capacitaciones +</a>
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav align-items-center gap-3">
+                <li class="nav-item"><a class="nav-link text-white" href="/">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="#">Cursos</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="#">Instructores</a></li>
+                <li class="nav-item"><a class="nav-link text-warning fw-bold" href="/recursos/">Recursos</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="#">Contacto</a></li>
+                <li class="nav-item ms-3"><a class="btn btn-yellow px-4 py-2" href="/login/">Iniciar sesión</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="container py-4">
+        
+        <!-- Migas de pan (Breadcrumb) -->
+        <nav aria-label="breadcrumb" class="mb-2">
+            <ol class="breadcrumb mb-1">
+                <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Inicio</a></li>
+                <li class="breadcrumb-item active text-dark" aria-current="page">Recursos</li>
+            </ol>
+        </nav>
+        
+        <h1 class="text-primary-custom display-6 mb-1">Recursos para tu desarrollo</h1>
+        <p class="text-muted mb-4">Guías, plantillas y materiales para preparar tu camino laboral.</p>
+
+        <!-- Buscador -->
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <div class="input-group shadow-sm" style="border-radius: 8px; overflow: hidden;">
+                    <span class="input-group-text bg-white border-end-0 ps-3 text-muted">🔍</span>
+                    <input type="text" class="form-control border-start-0 ps-0 py-2 shadow-none" placeholder="Buscar guías, plantillas, videos">
+                    <button class="btn btn-yellow px-4" type="button">Buscar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestañas de Categorías -->
+        <ul class="nav nav-categorias mb-4 border-bottom">
+            <li class="nav-item"><a class="nav-link active" href="#">Todos</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Guías</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Plantillas</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Videos</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Artículos</a></li>
+        </ul>
+
+        <!-- SECCIÓN: Recurso Destacado de la Semana -->
+        <div class="card card-destacada p-4 mb-5">
+            <div class="row g-4 align-items-center">
+                <div class="col-md-5">
+                    <div class="img-placeholder">
+                        <span>Imagen del recurso destacado</span>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2" style="font-size: 11px;">Destacado</span>
+                    <h3 class="fw-bold text-primary-custom mb-3">Título del recurso destacado de la semana</h3>
+                    <p class="text-muted small mb-4">Aprende las claves fundamentales para potenciar tu perfil profesional con este material exclusivo actualizado.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="btn btn-yellow px-4">Descargar</a>
+                        <a href="#" class="btn btn-outline-custom px-4">Ver más</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: Todos los recursos dinámicos (8 elementos) -->
+        <h3 class="text-primary-custom fs-4 mb-3">Todos los recursos</h3>
+
+        <div class="row g-4 mb-5">
+            {% for rec in recursos %}
+            <div class="col-md-4">
+                <div class="card card-recurso h-100">
+                    <div class="card-img-top-placeholder">Imagen / Preview</div>
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="mb-2"><span class="badge-tipo">{{ rec.tipo }}</span></div>
+                        <h5 class="fw-bold text-dark mb-3">{{ rec.titulo }}</h5>
+                        <div class="text-muted small mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
+                            <span>{{ rec.detalle }}</span>
+                            <a href="#" class="text-dark fw-bold text-decoration-none">Abrir →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+</body>
+</html> 

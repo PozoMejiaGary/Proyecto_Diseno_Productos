@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/app/static/css/estilosPrincipal.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg barra-navegacion sticky-top" data-bs-theme="dark">
+            <div class="container">
+                <a class="navbar-brand marca" href="{% url 'inicio' %}">
+                    <span class="marca-logo">Capacitaciones +</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal"
+                    aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menú">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="menuPrincipal">
+                    <ul class="navbar-nav mx-auto mb-3 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'inicio' %}">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Cursos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Instructores</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Recursos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+                    </ul>
+
+                <div class="d-flex align-items-lg-center gap-2">
+                    {% if user.is_authenticated %}
+                        <i class="bi bi-person-circle"></i>
+                        <span class="usuario d-none d-xl-inline"><i class="bi bi-person-circle"></i>  {{ user.nombres }}</span>
+
+                        <div class="dropdown">
+                            <button class="usuario-toggle" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false" aria-label="Menú de usuario">
+                                <i class="bi bi-caret-down-fill"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
+                                <li><a class="dropdown-item" href="#" title="Próximamente"><i class="bi bi-person"></i> Perfil</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="post" action="{% url 'salir' %}" class="m-0">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a class="btn btn-sesion" href="{% url 'login' %}">Iniciar sesión</a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="fondo">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-6">
+                        <span class="fondo-etiqueta">Cursos cortos · Práctica real · Certificado</span>
+                        <h1>Aprende lo que las empresas buscan en su <span class="resaltado">próximo equipo</span>.</h1>
+                        <p class="lead">Cursos cortos, con práctica real y certificado al terminar.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion">
+            <div class="container">
+                <h2 class="seccion-titulo">Áreas de formación</h2>
+                <p class="seccion-sub">Habilidades técnicas y personales que se valoran en cualquier equipo.</p>
+        
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5 g-3">
+                    <div class="col"><div class="tarjeta">
+                        <i class="bi bi-laptop"></i><h3>Tecnología</h3>
+                        <p>Herramientas digitales para el trabajo.</p>
+                    </div></div>
+                    <div class="col"><div class="tarjeta">
+                        <i class="bi bi-chat-dots"></i><h3>Comunicación</h3>
+                        <p>Expresa tus ideas con claridad y confianza.</p>
+                    </div></div>
+                    <div class="col"><div class="tarjeta">
+                        <i class="bi bi-briefcase"></i><h3>Empleabilidad</h3>
+                        <p>CV, entrevistas y búsqueda de empleo.</p>
+                    </div></div>
+                    <div class="col"><div class="tarjeta">
+                        <i class="bi bi-piggy-bank"></i><h3>Finanzas</h3>
+                        <p>Organiza y cuida tu dinero.</p>
+                    </div></div>
+                    <div class="col"><div class="tarjeta">
+                        <i class="bi bi-people"></i><h3>Liderazgo</h3>
+                        <p>Trabajo en equipo y toma de decisiones.</p>
+                    </div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion">
+            <div class="container">
+                <h2 class="seccion-titulo">Así de simple</h2>
+                <p class="seccion-sub">Tres pasos para llegar más preparado a tu próxima entrevista.</p>
+                <div class="row g-4">
+                <div class="col-md-4"><div class="paso"><span class="numero">1</span><h3>Elige un curso</h3><p>Explora cursos cortos de tecnología, comunicación, finanzas y más.</p></div></div>
+                <div class="col-md-4"><div class="paso"><span class="numero">2</span><h3>Practica de verdad</h3><p>Ejercicios y casos reales, a tu ritmo y desde cualquier dispositivo.</p></div></div>
+                <div class="col-md-4"><div class="paso"><span class="numero">3</span><h3>Certifícate</h3><p>Al terminar recibes un certificado que puedes agregar a tu CV.</p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="seccion">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <h2 class="seccion-titulo text-center">Preguntas frecuentes</h2>
+                        <p class="seccion-sub text-center">Lo básico antes de empezar.</p>
+                        <div class="accordion" id="preguntas">
+                            <div class="accordion-item">
+                                <h3 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#preg1" aria-expanded="true" aria-controls="preg1">¿Necesito experiencia previa?</button>
+                                </h3>
+                                <div id="preg1" class="accordion-collapse collapse show" data-bs-parent="#preguntas">
+                                    <div class="accordion-body">No. Hay cursos de nivel principiante y también intermedios, para que avances paso a paso.</div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#preg2" aria-expanded="false" aria-controls="preg2">¿Cuánto dura cada curso?</button>
+                                </h3>
+                                <div id="preg2" class="accordion-collapse collapse" data-bs-parent="#preguntas">
+                                    <div class="accordion-body">Entre 4 y 14 horas de contenido, según el tema. Puedes avanzar a tu ritmo.</div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#preg3" aria-expanded="false" aria-controls="preg3">¿Recibo un certificado?</button>
+                                </h3>
+                                <div id="preg3" class="accordion-collapse collapse" data-bs-parent="#preguntas">
+                                    <div class="accordion-body">Sí. Al terminar cada curso recibes un certificado que puedes agregar a tu CV.</div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#preg4" aria-expanded="false" aria-controls="preg4">¿Cómo me registro?</button>
+                                </h3>
+                                <div id="preg4" class="accordion-collapse collapse" data-bs-parent="#preguntas">
+                                    <div class="accordion-body">Haz clic en «Registrarme», completa tus nombres, apellidos, DNI, teléfono y correo, crea tu contraseña y acepta los términos y condiciones.</div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h3 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#preg5" aria-expanded="false" aria-controls="preg5">¿Puedo estudiar desde el celular?</button>
+                                </h3>
+                                <div id="preg5" class="accordion-collapse collapse" data-bs-parent="#preguntas">
+                                    <div class="accordion-body">Sí. La plataforma se adapta a celular, tablet y computadora.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="pie" id="contacto">
+        <div class="container d-flex flex-wrap justify-content-center align-items-center gap-3">
+        <div class="marca"><span class="marca-footer">C+</span></div>
+        <small>¿Tiendes dudas sobre algun curso? Escríbenos a capacitaciones+@gmail.com</small>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+
+</html>
