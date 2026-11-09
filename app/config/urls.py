@@ -1,11 +1,11 @@
+
 from django.urls import path
 
 from app.controlador import inicioController as inicio
 from app.controlador import usuarioController as c
-<<<<<<< HEAD
 from app.controlador import recursosController as recursos
-=======
->>>>>>> 3da1fcba777c30e6723dc6f98b8ca89e8cc7ea5a
+from app.controlador import instructoresController as instructores
+from app.controlador import contactoController as contacto
 
 urlpatterns = [
     path("", inicio.inicio_vista, name="inicio"),
@@ -14,9 +14,8 @@ urlpatterns = [
     path("principal/", c.principal_vista, name="principal"),
     path("perfil/", c.perfil_vista, name="perfil"),
     path("salir/", c.salir_vista, name="salir"),
-<<<<<<< HEAD
     path("recursos/", recursos.seccion_recursos, name="recursos"),
+    path("instructores/", instructores.seccion_instructores, name="instructores"),
+    path("contacto/", contacto.seccion_contacto, name="contacto"),
+    
 ] 
-=======
-]
->>>>>>> 3da1fcba777c30e6723dc6f98b8ca89e8cc7ea5a

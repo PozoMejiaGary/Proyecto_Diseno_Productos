@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contáctanos - Capacitaciones +</title>
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f4f7fb;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        /* COLOR AZUL EXACTO COMPARTIDO CON INSTRUCTORES Y RECURSOS */
+        .bg-navbar {
+            background-color: #1a2b56 !important;
+        }
+        .btn-warning-custom {
+            background-color: #f7ca18;
+            color: #1a2b56;
+            font-weight: 700;
+            border-radius: 20px;
+            padding: 6px 20px;
+        }
+        .btn-brand {
+            background-color: #f7ca18;
+            color: #1a2b56;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 6px 16px;
+        }
+        .title-serif {
+            font-family: Georgia, serif;
+            color: #1a2b56;
+            font-weight: 700;
+        }
+        .custom-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            padding: 10px 15px;
+            color: #64748b;
+        }
+        .map-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            background-color: #eef2f6;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .social-icon-circle {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #cbd5e1;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+        .info-box-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #f1f5f9;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a2b56;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-navbar px-4 py-3">
+        <div class="container-fluid">
+            <a class="navbar-brand me-4 btn-brand text-decoration-none" href="{% url 'inicio' %}">Capacitaciones +</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menuPrincipal">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-3">
+                     <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'inicio' %}">Inicio</a></li>
+                     <li class="nav-item"><a class="nav-link text-white-50" href="#">Cursos</a></li>
+                     <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'instructores' %}">Instructores</a></li>
+                     <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'recursos' %}">Recursos</a></li>
+                     <li class="nav-item"><a class="nav-link text-warning fw-bold border-bottom border-warning border-2 pb-1" href="{% url 'contacto' %}">Contacto</a></li>
+                 </ul>
+                <a href="{% url 'login' %}" class="btn btn-warning-custom text-decoration-none">Iniciar sesión</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="container py-4">
+        
+        <!-- Miga de pan -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb text-secondary small mb-2">
+                <li class="breadcrumb-item"><a href="{% url 'inicio' %}" class="text-decoration-none text-secondary">Inicio</a></li>
+                <li class="breadcrumb-item active text-secondary" aria-current="page">Contacto</li>
+            </ol>
+        </nav>
+
+        <!-- Encabezado -->
+        <div class="mb-4">
+            <h1 class="title-serif display-5 mb-1">Contáctanos</h1>
+            <p class="text-secondary mb-0">¿Tienes dudas o sugerencias? Escríbenos y te responderemos pronto.</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- COLUMNA IZQUIERDA: Formulario -->
+            <div class="col-lg-7">
+                <div class="custom-card p-4 p-md-5">
+                    <h3 class="title-serif fs-4 mb-4 text-dark">Envíanos un mensaje</h3>
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-semibold">Nombre completo</label>
+                            <input type="text" class="form-control" placeholder="">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-semibold">Correo electrónico</label>
+                            <input type="email" class="form-control" placeholder="">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-semibold">Asunto</label>
+                            <select class="form-select">
+                                <option selected disabled>Selecciona un tema</option>
+                                <option>Soporte técnico</option>
+                                <option>Información de cursos</option>
+                                <option>Sugerencias</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-semibold">Mensaje</label>
+                            <textarea class="form-control" rows="4" placeholder="Escribe tu mensaje aquí..."></textarea>
+                        </div>
+                        <div class="mb-4 form-check">
+                            <input type="checkbox" class="form-check-input" id="terminos">
+                            <label class="form-check-label text-secondary small" for="terminos">Acepto los términos y políticas de privacidad</label>
+                        </div>
+                        <button type="submit" class="btn btn-warning-custom px-4 py-2">Enviar mensaje</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: Información, Mapa y Redes -->
+            <div class="col-lg-5 d-flex flex-column gap-4">
+                
+                <!-- Tarjetas de Info -->
+                <div class="custom-card p-3 d-flex flex-column gap-3">
+                    <div class="d-flex align-items-center gap-3 p-2">
+                        <div class="info-box-icon"><i class="bi bi-envelope fs-5"></i></div>
+                        <div>
+                            <span class="text-secondary small d-block">Correo electrónico</span>
+                            <span class="fw-semibold text-dark small">contacto@capacitaciones.com</span>
+                        </div>
+                    </div>
+                    <hr class="m-0 text-muted opacity-10">
+                    <div class="d-flex align-items-center gap-3 p-2">
+                        <div class="info-box-icon"><i class="bi bi-telephone fs-5"></i></div>
+                        <div>
+                            <span class="text-secondary small d-block">Teléfono</span>
+                            <span class="fw-semibold text-dark small">+51 987 654 321</span>
+                        </div>
+                    </div>
+                    <hr class="m-0 text-muted opacity-10">
+                    <div class="d-flex align-items-center gap-3 p-2">
+                        <div class="info-box-icon"><i class="bi bi-clock fs-5"></i></div>
+                        <div>
+                            <span class="text-secondary small d-block">Horario de atención</span>
+                            <span class="fw-semibold text-dark small">Lun - Vie: 9:00 AM - 6:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mapa de ubicación -->
+                <div class="custom-card p-3">
+                    <div class="map-box">
+                        <span>Mapa de ubicación</span>
+                    </div>
+                </div>
+
+                <!-- Redes sociales -->
+                <div class="custom-card p-4 d-flex align-items-center justify-content-between">
+                    <span class="fw-semibold text-dark">Síguenos</span>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="social-icon-circle text-decoration-none"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-icon-circle text-decoration-none"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="social-icon-circle text-decoration-none"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-icon-circle text-decoration-none"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Sección Inferior: Preguntas frecuentes -->
+        <div class="custom-card p-4 mt-4 d-flex flex-md-row justify-content-between align-items-center">
+            <div>
+                <h4 class="title-serif fs-5 mb-1 text-dark">¿Buscas respuestas rápidas?</h4>
+                <p class="text-secondary small mb-0">Revisa nuestra sección de dudas frecuentes para resolver tus inquietudes al instante.</p>
+            </div>
+            <a href="#" class="btn btn-outline-dark fw-bold px-4 py-2 mt-3 mt-md-0 rounded-pill" style="border-color: #1a2b56; color: #1a2b56;">
+                Ver preguntas frecuentes <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
