@@ -28,9 +28,10 @@
                     <ul class="navbar-nav mx-auto mb-3 mb-lg-0">
                         <li class="nav-item"><a class="nav-link" href="{% url 'inicio' %}">Inicio</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'cursos' %}">Cursos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Instructores</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Recursos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+                        {% if user.is_authenticated %}<li class="nav-item"><a class="nav-link" href="{% url 'mis_cursos' %}">Mis cursos</a></li>{% endif %}
+                        {% if user.is_authenticated and user.puede_gestionar_cursos %}<li class="nav-item"><a class="nav-link" href="{% url 'gestionar_cursos' %}">Gestionar cursos</a></li>{% endif %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'recursos' %}">Recursos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
                     </ul>
 
                 <div class="d-flex align-items-lg-center gap-2">
@@ -44,7 +45,7 @@
                                 <i class="bi bi-caret-down-fill"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" data-bs-theme="light">
-                                <li><a class="dropdown-item" href="#" title="Próximamente"><i class="bi bi-person"></i> Perfil</a></li>
+                                <li><a class="dropdown-item" href="{% url 'perfil' %}"><i class="bi bi-person"></i> Perfil</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form method="post" action="{% url 'salir' %}" class="m-0">
@@ -175,7 +176,7 @@
     <footer class="pie" id="contacto">
         <div class="container d-flex flex-wrap justify-content-center align-items-center gap-3">
         <div class="marca"><span class="marca-footer">C+</span></div>
-        <small>¿Tiendes dudas sobre algun curso? Escríbenos a capacitaciones+@gmail.com</small>
+        <small>¿Tienes dudas sobre algún curso? Escríbenos a <a href="mailto:capacitaciones+@gmail.com">capacitaciones+@gmail.com</a>.</small>
         </div>
     </footer>
 

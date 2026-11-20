@@ -1,7 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Q
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from app.forms import CursoForm, LeccionForm, ModuloForm, ValoracionForm
@@ -17,7 +20,8 @@ def _anotar_progreso(curso, estudiante):
     curso.total_lecciones = total
     curso.lecciones_completadas = hechos
     curso.progreso = round(hechos * 100 / total) if total else 0
-    curso.estado_estudio = "Completado" if total and hechos == total else "En curso"
+    curso.completado = bool(total and hechos >= total)
+    curso.estado_estudio = "Completado" if curso.completado else "En curso"
 
 
 def seccion_cursos(request):
@@ -63,8 +67,10 @@ def mis_cursos(request):
 
 
 def detalle_curso(request, curso_id):
-    curso = get_object_or_404(Curso.objects.annotate(promedio=Avg("valoraciones__puntuacion")), pk=curso_id, publicado=True)
+    curso = get_object_or_404(Curso.objects.annotate(promedio=Avg("valoraciones__puntuacion")), pk=curso_id)
     inscrito = request.user.is_authenticated and InscripcionCurso.objects.filter(estudiante=request.user, curso=curso).exists()
+    if not curso.publicado and not inscrito:
+        raise Http404("No se encontró el curso")
     completadas = set()
     if inscrito:
         completadas = set(ProgresoLeccion.objects.filter(estudiante=request.user, leccion__modulo__curso=curso).values_list("leccion_id", flat=True))
@@ -74,6 +80,20 @@ def detalle_curso(request, curso_id):
     valoracion_existente = Valoracion.objects.filter(estudiante=request.user, curso=curso).first() if request.user.is_authenticated else None
     form_valoracion = ValoracionForm(instance=valoracion_existente)
     return render(request, "detalle_curso.html", {"curso": curso, "inscrito": inscrito, "completadas": completadas, "form_valoracion": form_valoracion})
+
+
+@login_required
+def certificado_curso(request, curso_id):
+    curso = get_object_or_404(Curso, pk=curso_id, ofrece_certificado=True)
+    inscrito = InscripcionCurso.objects.filter(estudiante=request.user, curso=curso).exists()
+    if not curso.publicado and not inscrito:
+        raise Http404("No se encontró el curso")
+    total = Leccion.objects.filter(modulo__curso=curso).count()
+    completadas = ProgresoLeccion.objects.filter(estudiante=request.user, leccion__modulo__curso=curso).count()
+    if not inscrito or total == 0 or completadas < total:
+        messages.error(request, "Completa todas las lecciones para obtener tu certificado.")
+        return redirect("detalle_curso", curso_id=curso.pk)
+    return render(request, "certificado.html", {"curso": curso, "estudiante": request.user, "emitido_en": timezone.localdate()})
 
 
 @login_required
@@ -103,13 +123,13 @@ def completar_leccion(request, leccion_id):
         return redirect("detalle_curso", curso_id=curso.pk)
     ProgresoLeccion.objects.get_or_create(estudiante=request.user, leccion=leccion)
     messages.success(request, "Lección marcada como completada.")
-    return redirect(f"/cursos/{curso.pk}/#leccion-{leccion.pk}")
+    return redirect(f"{reverse('detalle_curso', args=[curso.pk])}#leccion-{leccion.pk}")
 
 
 @login_required
 @require_POST
 def valorar_curso(request, curso_id):
-    curso = get_object_or_404(Curso, pk=curso_id, publicado=True)
+    curso = get_object_or_404(Curso, pk=curso_id)
     if not InscripcionCurso.objects.filter(estudiante=request.user, curso=curso).exists():
         messages.error(request, "Debes inscribirte antes de valorar este curso.")
         return redirect("detalle_curso", curso_id=curso.pk)
@@ -157,11 +177,13 @@ def guardar_curso(request, curso_id=None):
         form.save()
         messages.success(request, "Curso guardado.")
         return redirect("gestionar_cursos")
-    messages.error(request, "No se pudo guardar el curso. Revisa los campos.")
+    detalles_error = " ".join(f"{campo}: {', '.join(errores)}" for campo, errores in form.errors.items())
+    messages.error(request, f"No se pudo guardar el curso. {detalles_error}")
     cursos = Curso.objects.prefetch_related("modulos__lecciones").all()
     for item in cursos:
-        item.form_edicion = CursoForm(instance=item)
-    return render(request, "gestionar_cursos.html", {"cursos": cursos, "curso_form": form, "modulo_form": ModuloForm(), "leccion_form": LeccionForm()})
+        item.form_edicion = form if curso and item.pk == curso.pk else CursoForm(instance=item)
+    formulario_creacion = CursoForm() if curso else form
+    return render(request, "gestionar_cursos.html", {"cursos": cursos, "curso_form": formulario_creacion, "modulo_form": ModuloForm(), "leccion_form": LeccionForm()})
 
 
 @login_required
@@ -178,7 +200,8 @@ def guardar_modulo(request, curso_id):
         modulo.save()
         messages.success(request, "Módulo agregado.")
     else:
-        messages.error(request, "Revisa los datos del módulo.")
+        detalles_error = " ".join(f"{campo}: {', '.join(errores)}" for campo, errores in form.errors.items())
+        messages.error(request, f"No se pudo agregar el módulo. {detalles_error}")
     return redirect("gestionar_cursos")
 
 
@@ -196,7 +219,8 @@ def guardar_leccion(request, modulo_id):
         leccion.save()
         messages.success(request, "Lección agregada.")
     else:
-        messages.error(request, "Revisa los datos de la lección.")
+        detalles_error = " ".join(f"{campo}: {', '.join(errores)}" for campo, errores in form.errors.items())
+        messages.error(request, f"No se pudo agregar la lección. {detalles_error}")
     return redirect("gestionar_cursos")
 
 

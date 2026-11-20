@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/app/static/css/estilosLogin.css">
-    <title>Document</title>
+    <title>Accede a tu cuenta - Capacitaciones +</title>
 </head>
 
 <body>
@@ -19,10 +19,13 @@
         </section>
 
         <!--Inicio de sesion-->
-        <section class="central activo" aria-labelledby="form-title" id="acceso">
+        <section class="central {% if not mostrar_registro %}activo{% endif %}" aria-labelledby="form-title" id="acceso">
             <form class="formulario" action="{% url 'login' %}" method="post">
                 {% csrf_token %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
                 <h2>Ingresa a tu cuenta</h2>
+                {% if registrado %}<p class="alerta">Tu cuenta se creó correctamente. Ya puedes iniciar sesión.</p>{% endif %}
+                {% if errores and not mostrar_registro %}<div class="alerta" role="alert">{% for error in errores %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
 
                 <div class="datos">
                     <label for="email">Correo electrónico</label>
@@ -40,56 +43,58 @@
                         <input type="checkbox" name="remember">
                         <span>Mantener sesión iniciada</span>
                     </label>
-                    <a href="">Olvidé mi contraseña</a>
+                    <a href="mailto:capacitaciones+@gmail.com?subject=Ayuda%20para%20recuperar%20mi%20cuenta">¿Problemas para acceder?</a>
                 </div>
 
                 <button type="submit" class="btn">Ingresar</button>
 
-                <p class="crear">¿No tienes una cuenta? <a href="" id="btn-login">Crear mi cuenta</a></p>
+                <p class="crear">¿No tienes una cuenta? <a href="#registro" id="btn-login">Crear mi cuenta</a></p>
             </form>
         </section>
 
         <!--Registro-->
-        <section class="central" aria-labelledby="form-title" id="registro">
+        <section class="central {% if mostrar_registro %}activo{% endif %}" aria-labelledby="form-title" id="registro">
             <form class="formulario" action="{% url 'registro' %}" method="post">
                 {% csrf_token %}
+                {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
                 <h2>Crea tu cuenta</h2>
+                {% if errores and mostrar_registro %}<div class="alerta" role="alert">{% for error in errores %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
 
                 <div class="datos">
                     <label for="nombres">Nombres</label>
-                    <input type="text" id="nombres" name="nombres" required>
+                    <input type="text" id="nombres" name="nombres" value="{{ datos_registro.nombres|default:'' }}" autocomplete="given-name" required>
                 </div>
                 <div class="datos">
                     <label for="apellidos">Apellidos</label>
-                    <input type="text" id="apellidos" name="apellidos" required>
+                    <input type="text" id="apellidos" name="apellidos" value="{{ datos_registro.apellidos|default:'' }}" autocomplete="family-name" required>
                 </div>
                 <div class="datos">
                     <label for="dni">DNI</label>
-                    <input type="text" id="dni" name="dni" minlength="8" required>
+                    <input type="text" id="dni" name="dni" value="{{ datos_registro.dni|default:'' }}" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" minlength="8" required>
                 </div>
                 <div class="datos">
                     <label for="telefono">Telefono</label>
-                    <input type="tel" id="telefono" name="telefono" minlength="9" required>
+                    <input type="tel" id="telefono" name="telefono" value="{{ datos_registro.telefono|default:'' }}" inputmode="numeric" pattern="[0-9]{9}" maxlength="9" minlength="9" required>
                 </div>
                 <div class="datos">
                     <label for="email">Correo electrónico</label>
-                    <input type="email" id="correo" name="email" placeholder="nombre@correo.com" required>
+                    <input type="email" id="correo" name="email" value="{{ datos_registro.email|default:'' }}" autocomplete="email" placeholder="nombre@correo.com" required>
                 </div>
                 <div class="datos">
-                    <label for="contraseña">Contraseña</label>
+                    <label for="contrasena">Contraseña</label>
                     <input type="password" id="contrasena" name="password" minlength="8" required>
                 </div>
 
                 <div class="mantener-sesion">
                     <label class="check">
                         <input type="checkbox" name="terminos" required>
-                        <span>Acepto el acuerdo de <a href="">Terminos y condiciones</a></span>
+                        <span>Acepto los <a href="{% url 'terminos' %}{% if next %}?next={{ next|urlencode }}{% endif %}" target="_blank" rel="noopener">Términos y condiciones</a></span>
                     </label>
                 </div>
 
                 <button type="submit" class="btn">Registrarme</button>
 
-                <p class="crear">¿Ya tienes una cuenta? <a href="#" id="btn-registro">Inicia sesion</a></p>
+                <p class="crear">¿Ya tienes una cuenta? <a href="#acceso" id="btn-registro">Inicia sesión</a></p>
             </form>
         </section>
 

@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Recursos para tu desarrollo - Capacítate+</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -33,17 +34,19 @@
 
     <!-- Menú Superior con los colores exactos -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom px-4 py-3">
-        <a class="navbar-brand fw-bold text-dark px-3 py-1 rounded" style="background-color: #ffc107;" href="#">Capacitaciones +</a>
-        <div class="collapse navbar-collapse justify-content-end">
+        <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-dark px-3 py-1 rounded" style="background-color: #ffc107;" href="{% url 'inicio' %}">Capacitaciones +</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuRecursos" aria-controls="menuRecursos" aria-expanded="false" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse justify-content-end" id="menuRecursos">
             <ul class="navbar-nav align-items-center gap-3">
-                <li class="nav-item"><a class="nav-link text-white" href="/">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="/cursos/">Cursos</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="#">Instructores</a></li>
-                <li class="nav-item"><a class="nav-link text-warning fw-bold" href="/recursos/">Recursos</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="#">Contacto</a></li>
-                <li class="nav-item ms-3"><a class="btn btn-yellow px-4 py-2" href="/login/">Iniciar sesión</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="{% url 'inicio' %}">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="{% url 'cursos' %}">Cursos</a></li>
+                {% if user.is_authenticated %}<li class="nav-item"><a class="nav-link text-white" href="{% url 'mis_cursos' %}">Mis cursos</a></li><li class="nav-item"><a class="nav-link text-white" href="{% url 'perfil' %}">Mi perfil</a></li>{% endif %}
+                {% if user.is_authenticated and user.puede_gestionar_cursos %}<li class="nav-item"><a class="nav-link text-white" href="{% url 'gestionar_cursos' %}">Gestionar cursos</a></li>{% endif %}
+                <li class="nav-item"><a class="nav-link text-warning fw-bold" href="{% url 'recursos' %}">Recursos</a></li>
+                {% if user.is_authenticated %}<li class="nav-item"><form method="post" action="{% url 'salir' %}" class="m-0">{% csrf_token %}<button class="btn btn-yellow px-4 py-2">Cerrar sesión</button></form></li>{% else %}<li class="nav-item ms-3"><a class="btn btn-yellow px-4 py-2" href="{% url 'login' %}">Iniciar sesión</a></li>{% endif %}
             </ul>
-        </div>
+        </div></div>
     </nav>
 
     <!-- Contenido Principal -->
@@ -52,7 +55,7 @@
         <!-- Migas de pan (Breadcrumb) -->
         <nav aria-label="breadcrumb" class="mb-2">
             <ol class="breadcrumb mb-1">
-                <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'inicio' %}" class="text-decoration-none text-muted">Inicio</a></li>
                 <li class="breadcrumb-item active text-dark" aria-current="page">Recursos</li>
             </ol>
         </nav>
@@ -61,27 +64,26 @@
         <p class="text-muted mb-4">Guías, plantillas y materiales para preparar tu camino laboral.</p>
 
         <!-- Buscador -->
-        <div class="row mb-4">
+        <form class="row mb-4" method="get" action="{% url 'recursos' %}">
             <div class="col-lg-8">
                 <div class="input-group shadow-sm" style="border-radius: 8px; overflow: hidden;">
                     <span class="input-group-text bg-white border-end-0 ps-3 text-muted">🔍</span>
-                    <input type="text" class="form-control border-start-0 ps-0 py-2 shadow-none" placeholder="Buscar guías, plantillas, videos">
-                    <button class="btn btn-yellow px-4" type="button">Buscar</button>
+                    <input type="search" name="q" value="{{ consulta }}" class="form-control border-start-0 ps-0 py-2 shadow-none" placeholder="Buscar guías, plantillas y artículos" aria-label="Buscar recursos">
+                    {% if categoria_actual %}<input type="hidden" name="categoria" value="{{ categoria_actual }}">{% endif %}
+                    <button class="btn btn-yellow px-4" type="submit">Buscar</button>
                 </div>
             </div>
-        </div>
+            {% if consulta or categoria_actual %}<div class="col-12 mt-2"><a href="{% url 'recursos' %}" class="small">Limpiar búsqueda y filtros</a></div>{% endif %}
+        </form>
 
         <!-- Pestañas de Categorías -->
         <ul class="nav nav-categorias mb-4 border-bottom">
-            <li class="nav-item"><a class="nav-link active" href="#">Todos</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Guías</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Plantillas</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Videos</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Artículos</a></li>
+            <li class="nav-item"><a class="nav-link {% if not categoria_actual %}active{% endif %}" href="{% url 'recursos' %}{% if consulta %}?q={{ consulta|urlencode }}{% endif %}">Todos</a></li>
+            {% for categoria in categorias %}<li class="nav-item"><a class="nav-link {% if categoria_actual == categoria %}active{% endif %}" href="{% url 'recursos' %}?categoria={{ categoria|urlencode }}{% if consulta %}&q={{ consulta|urlencode }}{% endif %}">{{ categoria }}</a></li>{% endfor %}
         </ul>
 
         <!-- SECCIÓN: Recurso Destacado de la Semana -->
-        <div class="card card-destacada p-4 mb-5">
+        {% if not consulta and not categoria_actual %}<div class="card card-destacada p-4 mb-5">
             <div class="row g-4 align-items-center">
                 <div class="col-md-5">
                     <div class="img-placeholder">
@@ -90,38 +92,40 @@
                 </div>
                 <div class="col-md-7">
                     <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2" style="font-size: 11px;">Destacado</span>
-                    <h3 class="fw-bold text-primary-custom mb-3">Título del recurso destacado de la semana</h3>
-                    <p class="text-muted small mb-4">Aprende las claves fundamentales para potenciar tu perfil profesional con este material exclusivo actualizado.</p>
+                    <h3 class="fw-bold text-primary-custom mb-3">{{ recurso_destacado.titulo }}</h3>
+                    <p class="text-muted small mb-4">{{ recurso_destacado.resumen }}</p>
                     <div class="d-flex gap-3">
-                        <a href="#" class="btn btn-yellow px-4">Descargar</a>
-                        <a href="#" class="btn btn-outline-custom px-4">Ver más</a>
+                        <a href="{% url 'descargar_recurso' recurso_destacado.slug %}" class="btn btn-yellow px-4">Descargar</a>
+                        <a href="{% url 'detalle_recurso' recurso_destacado.slug %}" class="btn btn-outline-custom px-4">Leer guía</a>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>{% endif %}
 
         <!-- SECCIÓN: Todos los recursos dinámicos (8 elementos) -->
-        <h3 class="text-primary-custom fs-4 mb-3">Todos los recursos</h3>
+        <h3 class="text-primary-custom fs-4 mb-3">{% if consulta %}Resultados para “{{ consulta }}”{% elif categoria_actual %}{{ categoria_actual }}{% else %}Todos los recursos{% endif %}</h3>
 
         <div class="row g-4 mb-5">
             {% for rec in recursos %}
             <div class="col-md-4">
                 <div class="card card-recurso h-100">
-                    <div class="card-img-top-placeholder">Imagen / Preview</div>
+                        <div class="card-img-top-placeholder"><span class="badge-tipo">{{ rec.categoria }}</span></div>
                     <div class="card-body p-4 d-flex flex-column">
                         <div class="mb-2"><span class="badge-tipo">{{ rec.tipo }}</span></div>
                         <h5 class="fw-bold text-dark mb-3">{{ rec.titulo }}</h5>
                         <div class="text-muted small mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
                             <span>{{ rec.detalle }}</span>
-                            <a href="#" class="text-dark fw-bold text-decoration-none">Abrir →</a>
+                            <a href="{% url 'detalle_recurso' rec.slug %}" class="text-dark fw-bold text-decoration-none">Abrir →</a>
                         </div>
                     </div>
                 </div>
             </div>
+            {% empty %}<div class="col-12"><div class="card p-4"><p class="mb-2">No encontramos recursos para esta búsqueda.</p><a href="{% url 'recursos' %}">Ver todos los recursos</a></div></div>
             {% endfor %}
         </div>
 
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

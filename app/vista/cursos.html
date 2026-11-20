@@ -55,3 +55,45 @@
         .categoria { position: absolute; left: .8rem; top: .8rem; background: #fff; color: var(--azul); font-size: .75rem; font-weight: 600; padding: .25rem .7rem; border-radius: 999px; }
         .curso-cuerpo { padding: 1.2rem; display: flex; flex-direction: column; flex: 1; }
         .nivel { font-size: .8rem; font-weight: 600; color: var(--texto-suave); margin-bottom: .4rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg barra-navegacion">
+        <div class="container">
+            <a class="navbar-brand marca-logo" href="{% url 'inicio' %}">Capacitaciones +</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navCursos" aria-controls="navCursos" aria-expanded="false" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navCursos">
+                <div class="navbar-nav mx-auto">
+                    <a class="nav-link" href="{% url 'inicio' %}">Inicio</a>
+                    <a class="nav-link activo" href="{% url 'cursos' %}">Cursos</a>
+                    {% if request.user.is_authenticated %}<a class="nav-link" href="{% url 'mis_cursos' %}">Mis cursos</a><a class="nav-link" href="{% url 'perfil' %}">Mi perfil</a>{% endif %}
+                    {% if request.user.is_authenticated and request.user.puede_gestionar_cursos %}<a class="nav-link" href="{% url 'gestionar_cursos' %}">Gestionar cursos</a>{% endif %}
+                    <a class="nav-link" href="{% url 'recursos' %}">Recursos</a>
+                </div>
+                {% if request.user.is_authenticated %}<form method="post" action="{% url 'salir' %}" class="m-0">{% csrf_token %}<button class="btn btn-contorno">Cerrar sesión</button></form>{% else %}<a class="btn btn-sesion px-3" href="{% url 'login' %}">Iniciar sesión</a>{% endif %}
+            </div>
+        </div>
+    </nav>
+    <header class="hero"><div class="container"><h1>{% if mis_cursos %}Mis cursos{% else %}Encuentra tu próximo curso{% endif %}</h1><p class="text-white-50 mb-0 mt-2">Aprende a tu ritmo y lleva un seguimiento de tu avance.</p></div></header>
+    <main class="container pb-5">
+        {% if messages %}{% for message in messages %}<div class="alert alert-info mt-3">{{ message }}</div>{% endfor %}{% endif %}
+        {% if not mis_cursos %}
+        <form class="filtros" method="get" action="{% url 'cursos' %}">
+            <div class="row g-2 align-items-center">
+                <div class="col-lg-5"><label class="visually-hidden" for="q">Buscar curso</label><input id="q" class="form-control" name="q" value="{{ busqueda }}" placeholder="Buscar por curso, tema o instructor"></div>
+                <div class="col-md-4 col-lg-2"><label class="visually-hidden" for="categoria">Categoría</label><select class="form-select" id="categoria" name="categoria"><option value="">Todas las áreas</option>{% for item in categorias %}<option value="{{ item }}" {% if categoria_actual == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select></div>
+                <div class="col-md-4 col-lg-2"><label class="visually-hidden" for="nivel">Nivel</label><select class="form-select" id="nivel" name="nivel"><option value="">Todos los niveles</option>{% for item in niveles %}<option value="{{ item }}" {% if nivel_actual == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select></div>
+                <div class="col-md-4 col-lg-2"><label class="visually-hidden" for="duracion">Duración</label><select class="form-select" id="duracion" name="duracion"><option value="">Cualquier duración</option><option value="corto" {% if duracion_actual == 'corto' %}selected{% endif %}>Hasta 8 horas</option><option value="medio" {% if duracion_actual == 'medio' %}selected{% endif %}>9 a 20 horas</option><option value="largo" {% if duracion_actual == 'largo' %}selected{% endif %}>Más de 20 horas</option></select></div>
+                <div class="col-lg-1 d-grid"><button class="btn btn-amarillo py-2" type="submit">Buscar</button></div>
+            </div>
+        </form>
+        {% endif %}
+        <div class="d-flex justify-content-between align-items-center mt-4 mb-3"><h2 class="h4 mb-0">{% if mis_cursos %}Tu aprendizaje{% else %}Cursos disponibles{% endif %}</h2>{% if mis_cursos %}<a href="{% url 'cursos' %}" class="btn btn-contorno btn-sm">Explorar catálogo</a>{% endif %}</div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for curso in cursos %}<div class="col"><article class="curso"><div class="curso-media">{% if curso.url_imagen %}<img src="{{ curso.url_imagen }}" alt="Imagen de {{ curso.nombre }}">{% endif %}<span class="categoria">{{ curso.categoria }}</span></div><div class="curso-cuerpo"><span class="nivel">{{ curso.nivel }} · {{ curso.duracion_horas }} horas</span><h3 class="h5">{{ curso.nombre }}</h3><p>{{ curso.descripcion|truncatewords:24 }}</p>{% if mis_cursos %}<div class="small mb-2">{{ curso.lecciones_completadas }}/{{ curso.total_lecciones }} lecciones · {{ curso.progreso }}%</div><div class="progress mb-3"><div class="progress-bar" style="width:{{ curso.progreso }}%"></div></div>{% endif %}<a class="btn btn-amarillo mt-auto" href="{% url 'detalle_curso' curso.id_curso %}">{% if mis_cursos %}Continuar curso{% else %}Ver curso{% endif %}</a>{% if mis_cursos %}<form method="post" action="{% url 'cancelar_inscripcion' curso.id_curso %}" class="mt-2">{% csrf_token %}<button type="submit" class="btn btn-contorno btn-sm w-100" onclick="return confirm('¿Quieres quitar este curso de Mis cursos?')">Quitar de mis cursos</button></form>{% if curso.completado and curso.ofrece_certificado %}<a class="btn btn-outline-success btn-sm mt-2 w-100" href="{% url 'certificado_curso' curso.id_curso %}">Ver certificado</a>{% endif %}{% endif %}</div></article></div>{% empty %}<div class="col-12"><div class="bg-white rounded-4 p-4"><p class="mb-2">{% if mis_cursos %}Todavía no te has inscrito en ningún curso.{% else %}No encontramos cursos con esos filtros.{% endif %}</p>{% if mis_cursos %}<a href="{% url 'cursos' %}" class="btn btn-amarillo">Explorar cursos</a>{% else %}<a href="{% url 'cursos' %}" class="limpiar">Limpiar filtros</a>{% endif %}</div></div>{% endfor %}
+        </div>
+        <div class="text-center mt-5"><a href="{% url 'perfil' %}" class="text-decoration-none">Ver mi perfil y progreso →</a></div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
