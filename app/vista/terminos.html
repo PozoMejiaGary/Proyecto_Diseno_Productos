@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Términos y condiciones - Capacitaciones +</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:#eef4fd;color:#1b2a5e}.marca{background:#f5c518;color:#1b2d6b;font-weight:700}.panel{border:0;border-radius:1rem;box-shadow:0 8px 24px #1b2d6b15}</style></head>
+<body>
+    <nav class="navbar navbar-dark px-3 px-md-5 py-3" style="background:#1b2d6b"><a class="navbar-brand marca px-3 py-2 rounded" href="{% url 'inicio' %}">Capacitaciones +</a><a class="nav-link text-white" href="{% url 'login' %}?registro=1{% if next %}&next={{ next|urlencode }}{% endif %}">Crear cuenta</a></nav>
+    <main class="container py-5"><article class="panel bg-white p-4 p-md-5"><h1 class="h2">Términos de uso</h1><p class="text-secondary">Información para el uso de la plataforma de capacitación.</p>
+        <h2 class="h5 mt-4">Cuenta</h2><p>Proporciona datos correctos y mantén protegida tu contraseña. La cuenta es personal; informa al equipo de soporte si detectas actividad que no reconoces.</p>
+        <h2 class="h5 mt-4">Cursos y recursos</h2><p>Los materiales se ofrecen para aprendizaje personal. No los presentes como propios ni los redistribuyas como contenido comercial. La disponibilidad de cursos y recursos puede cambiar.</p>
+        <h2 class="h5 mt-4">Uso respetuoso</h2><p>Usa la plataforma de forma legal y respetuosa. Las valoraciones deben referirse a tu experiencia y no incluir datos privados de otras personas.</p>
+        <h2 class="h5 mt-4">Datos personales y consultas</h2><p>Puedes revisar y actualizar los datos editables desde tu perfil. Para solicitar ayuda con la cuenta o consultar sobre estos términos, escribe a <a href="mailto:capacitaciones+@gmail.com">capacitaciones+@gmail.com</a>.</p>
+        <a class="btn btn-warning fw-bold mt-3" href="{% url 'login' %}?registro=1{% if next %}&next={{ next|urlencode }}{% endif %}">Volver al registro</a>
+    </article></main>
+</body>
+</html>

@@ -107,6 +107,18 @@ body {
   line-height: 1.1;
 }
 
+.alerta {
+  margin: 1rem 0;
+  padding: .8rem 1rem;
+  color: var(--error);
+  background: #fff0f2;
+  border: 1px solid #f1b6c0;
+  border-radius: .75rem;
+  font-size: .9rem;
+}
+.alerta p { margin: 0; }
+.alerta p + p { margin-top: .35rem; }
+
 .datos {
   margin-bottom: 1.25rem;
 }

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mi perfil - Capacitaciones +</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root { --azul:#1B2D6B; --amarillo:#F5C518; --fondo:#EEF4FD; --texto:#1B2A5E; --suave:#6B7A99; --borde:#DCE5F5; }
+        body { background:var(--fondo); color:var(--texto); font-family:system-ui,"Segoe UI",sans-serif; }
+        .navbar-custom { background:var(--azul); }
+        .marca { background:var(--amarillo); color:var(--azul); font-weight:700; }
+        .panel { border:0; border-radius:1rem; box-shadow:0 10px 30px rgba(27,45,107,.1); }
+        .avatar { width:4rem; height:4rem; display:grid; place-items:center; border-radius:50%; background:#e7edfb; color:var(--azul); font-size:1.8rem; }
+        .form-control { border-color:var(--borde); border-radius:.65rem; padding:.7rem .85rem; }
+        .form-control:focus { border-color:var(--azul); box-shadow:0 0 0 .2rem rgba(27,45,107,.12); }
+        .btn-guardar { background:var(--amarillo); color:var(--azul); border:0; font-weight:700; border-radius:.65rem; }
+        .btn-guardar:hover { background:#e3b50e; color:var(--azul); }
+        .dato-fijo { background:#f6f8fc; }
+        .stat { border:1px solid var(--borde); border-radius:.8rem; background:#fff; }
+        .link-zona { color:var(--azul); font-weight:600; text-decoration:none; }
+        .link-zona:hover { color:#4059a8; }
+        .curso-recomendado { border:1px solid var(--borde); border-radius:.9rem; height:100%; }
+        .estrellas { color:#e3a900; letter-spacing:.08em; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom px-3 px-md-4 py-3">
+        <div class="container-fluid">
+            <a class="navbar-brand marca px-3 py-2 rounded" href="{% url 'inicio' %}">Capacitaciones +</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navPerfil" aria-controls="navPerfil" aria-expanded="false" aria-label="Abrir menú"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navPerfil">
+                <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                    <a class="nav-link" href="{% url 'inicio' %}">Inicio</a>
+                    <a class="nav-link" href="{% url 'cursos' %}">Explorar cursos</a>
+                    <a class="nav-link" href="{% url 'mis_cursos' %}">Mis cursos</a>
+                    <a class="nav-link" href="{% url 'recursos' %}">Recursos</a>
+                    {% if user.puede_gestionar_cursos %}<a class="nav-link" href="{% url 'gestionar_cursos' %}">Gestionar cursos</a>{% endif %}
+                    <form method="post" action="{% url 'salir' %}" class="m-0 ms-lg-2">{% csrf_token %}<button class="btn btn-sm btn-outline-light">Cerrar sesión</button></form>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main class="container py-4 py-md-5">
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+            <div><a href="{% url 'inicio' %}" class="text-decoration-none">← Volver al inicio</a><h1 class="h2 mt-3 mb-1">Hola, {{ user.nombres }}</h1><p class="text-secondary mb-0">Gestiona tu cuenta y sigue avanzando con tus cursos.</p></div>
+            <a class="btn btn-guardar px-3 py-2" href="{% url 'cursos' %}"><i class="bi bi-compass me-1"></i> Explorar cursos</a>
+        </div>
+        <nav class="nav nav-pills gap-2 mb-4" aria-label="Secciones del perfil">
+            <a class="nav-link active" href="#resumen">Resumen</a><a class="nav-link" href="#datos">Mis datos</a><a class="nav-link" href="#aprendizaje">Aprendizaje</a><a class="nav-link" href="#actividad">Actividad</a><a class="nav-link" href="#explorar">Explorar</a><a class="nav-link" href="#valoraciones">Valoraciones</a><a class="nav-link" href="#seguridad">Seguridad</a>
+        </nav>
+        <div class="row justify-content-center mt-3">
+            <div class="col-lg-10 col-xl-9">
+                <div id="resumen" class="row g-3 mb-4">
+                    <div class="col-md-4"><div class="stat p-3 h-100"><div class="text-secondary small">Cursos inscritos</div><div class="fs-3 fw-bold">{{ total_cursos }}</div></div></div>
+                    <div class="col-md-4"><div class="stat p-3 h-100"><div class="text-secondary small">Cursos completados</div><div class="fs-3 fw-bold">{{ cursos_completados }}</div></div></div>
+                    <div class="col-md-4"><div class="stat p-3 h-100"><div class="text-secondary small">Lecciones completadas</div><div class="fs-3 fw-bold">{{ lecciones_completadas_total }}</div></div></div>
+                </div>
+                <section id="datos" class="panel bg-white p-4 p-md-5">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="avatar" aria-hidden="true"><i class="bi bi-person"></i></div>
+                        <div><h2 class="h3 mb-1">Mis datos</h2><p class="text-secondary mb-0">Miembro desde {{ user.creado_en|date:"d/m/Y" }} · Consulta y actualiza tus datos personales.</p></div>
+                    </div>
+                    {% if messages %}{% for message in messages %}<div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}" role="status">{{ message }}</div>{% endfor %}{% endif %}
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {% for field in formulario %}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                {% if field.errors %}<div class="text-danger small mt-1">{{ field.errors|join:", " }}</div>{% endif %}
+                            </div>
+                        {% endfor %}
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold" for="dni">DNI</label>
+                            <input id="dni" class="form-control dato-fijo" value="{{ user.dni }}" readonly aria-describedby="dni-ayuda">
+                            <div id="dni-ayuda" class="form-text">El DNI no se puede modificar desde el perfil.</div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <button type="submit" class="btn btn-guardar px-4 py-2"><i class="bi bi-check2-circle me-1"></i> Guardar cambios</button>
+                            <a href="{% url 'mis_cursos' %}" class="btn btn-outline-secondary px-4 py-2">Ir a mis cursos</a>
+                        </div>
+                    </form>
+                </section>
+                <section id="aprendizaje" class="panel bg-white p-4 p-md-5 mt-4">
+                    <div class="d-flex justify-content-between align-items-center gap-2 mb-3"><h2 class="h4 mb-0">Mi aprendizaje</h2><a class="link-zona" href="{% url 'mis_cursos' %}">Ver todos mis cursos →</a></div>
+                    {% for curso in cursos %}
+                        <div class="border rounded-3 p-3 mb-3">
+                            <div class="d-flex flex-wrap justify-content-between gap-2">
+                                <div><h3 class="h6 mb-1">{{ curso.nombre }}</h3><small class="text-secondary">{{ curso.lecciones_completadas }} de {{ curso.total_lecciones }} lecciones</small></div>
+                                <a class="btn btn-sm btn-outline-primary align-self-center" href="{% url 'detalle_curso' curso.id_curso %}">{% if curso.completado %}Repasar curso{% else %}Continuar{% endif %}</a>
+                            </div>
+                            <div class="progress mt-3" role="progressbar" aria-label="Avance de {{ curso.nombre }}" aria-valuenow="{{ curso.progreso }}" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar" style="width:{{ curso.progreso }}%">{{ curso.progreso }}%</div></div>
+                            {% if curso.completado and curso.ofrece_certificado %}<a class="link-zona small d-inline-block mt-2" href="{% url 'certificado_curso' curso.id_curso %}">Ver certificado imprimible →</a>{% endif %}
+                        </div>
+                    {% empty %}
+                        <p class="text-secondary">Aún no tienes cursos inscritos. Explora el catálogo para empezar.</p>
+                        <a class="btn btn-guardar px-3" href="{% url 'cursos' %}">Explorar cursos</a>
+                    {% endfor %}
+                </section>
+                <section id="actividad" class="panel bg-white p-4 p-md-5 mt-4">
+                    <div class="d-flex justify-content-between align-items-center gap-2 mb-3"><h2 class="h4 mb-0">Actividad reciente</h2><a class="link-zona" href="{% url 'mis_cursos' %}">Ir a mis cursos →</a></div>
+                    {% for item in actividad_reciente %}<div class="d-flex justify-content-between align-items-center border-bottom py-3 gap-2"><div><div class="fw-semibold">Completaste: {{ item.leccion.titulo }}</div><div class="small text-secondary">{{ item.leccion.modulo.curso.nombre }}</div></div><time class="small text-secondary">{{ item.completado_en|date:"d/m/Y" }}</time></div>{% empty %}<p class="text-secondary mb-0">Cuando completes lecciones, tu actividad aparecerá aquí.</p>{% endfor %}
+                </section>
+                <section id="explorar" class="panel bg-white p-4 p-md-5 mt-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"><div><h2 class="h4 mb-1">Explora nuevas oportunidades</h2><p class="text-secondary mb-0">Cursos relacionados con tus intereses y recursos para seguir creciendo.</p></div><a class="link-zona" href="{% url 'recursos' %}">Ver recursos →</a></div>
+                    <div class="d-flex flex-wrap gap-2 mb-4">{% for categoria in categorias %}<a class="btn btn-outline-primary btn-sm rounded-pill" href="{% url 'cursos' %}?categoria={{ categoria|urlencode }}">{{ categoria }}</a>{% empty %}<span class="text-secondary">Pronto habrá nuevas áreas para explorar.</span>{% endfor %}</div>
+                    <h3 class="h6 fw-bold mb-3">{% if total_cursos %}También te puede interesar{% else %}Empieza por aquí{% endif %}</h3>
+                    <div class="row g-3">{% for curso in recomendaciones %}<div class="col-md-6"><article class="curso-recomendado p-3"><span class="badge text-bg-light mb-2">{{ curso.categoria }} · {{ curso.nivel }}</span><h4 class="h6">{{ curso.nombre }}</h4><p class="small text-secondary">{{ curso.descripcion|truncatewords:18 }}</p><a class="link-zona" href="{% url 'detalle_curso' curso.id_curso %}">Conocer el curso →</a></article></div>{% empty %}<div class="col-12"><p class="text-secondary">Ya estás inscrito en todos los cursos publicados. Revisa los <a href="{% url 'recursos' %}">recursos</a> para continuar aprendiendo.</p></div>{% endfor %}</div>
+                </section>
+                <section id="valoraciones" class="panel bg-white p-4 p-md-5 mt-4">
+                    <div class="d-flex justify-content-between align-items-center gap-2 mb-3"><h2 class="h4 mb-0">Mis valoraciones</h2><span class="badge text-bg-light">{{ total_valoraciones }} en total · {% if promedio_valoraciones %}{{ promedio_valoraciones|floatformat:1 }}/5 promedio{% else %}sin promedio{% endif %}</span></div>
+                    {% for valoracion in valoraciones %}<article class="border-bottom py-3"><div class="d-flex justify-content-between gap-2"><a class="fw-semibold link-zona" href="{% url 'detalle_curso' valoracion.curso.id_curso %}">{{ valoracion.curso.nombre }}</a><span class="estrellas" aria-label="{{ valoracion.puntuacion }} de 5 estrellas">{% for estrella in "12345" %}{% if forloop.counter <= valoracion.puntuacion %}★{% else %}☆{% endif %}{% endfor %}</span></div>{% if valoracion.comentario %}<p class="mb-1 mt-2">{{ valoracion.comentario }}</p>{% endif %}<small class="text-secondary">{{ valoracion.creada_en|date:"d/m/Y" }} · <a href="{% url 'detalle_curso' valoracion.curso.id_curso %}#valoraciones">Editar valoración</a></small></article>{% empty %}<p class="text-secondary mb-0">Aún no has valorado cursos. Entra a un curso inscrito para compartir tu opinión.</p>{% endfor %}
+                </section>
+                <section id="seguridad" class="panel bg-white p-4 p-md-5 mt-4">
+                    <h2 class="h4 mb-1">Seguridad</h2>
+                    <p class="text-secondary mb-4">Cambia tu contraseña verificando primero la actual.</p>
+                    <form method="post" action="{% url 'perfil' %}" novalidate>
+                        {% csrf_token %}<input type="hidden" name="accion" value="contrasena">
+                        {% for field in formulario_contrasena %}
+                            <div class="mb-3"><label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.errors %}<div class="text-danger small mt-1">{{ field.errors|join:", " }}</div>{% endif %}</div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-outline-primary px-4">Actualizar contraseña</button>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
