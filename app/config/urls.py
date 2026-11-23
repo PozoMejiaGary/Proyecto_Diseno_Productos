@@ -4,6 +4,7 @@ from app.controlador import inicioController as inicio
 from app.controlador import usuarioController as c
 from app.controlador import recursosController as recursos
 from app.controlador import cursosController as cursos
+from app.controlador import panelMovilController as panel
 
 urlpatterns = [
     path("", inicio.inicio_vista, name="inicio"),
@@ -29,4 +30,5 @@ urlpatterns = [
     path("gestionar-cursos/<int:curso_id>/guardar/", cursos.guardar_curso, name="editar_curso"),
     path("gestionar-cursos/<int:curso_id>/modulos/", cursos.guardar_modulo, name="crear_modulo"),
     path("gestionar-modulos/<int:modulo_id>/lecciones/", cursos.guardar_leccion, name="crear_leccion"),
+    path("panel/", panel.panel_movil, name="panel_movil"),
 ]

@@ -1,0 +1,77 @@
+:root {
+  --bs-primary: #1B2D6B;  --bs-primary-rgb: 27, 45, 107;
+  --bs-warning: #F5C518;  --bs-warning-rgb: 245, 197, 24;
+  --bs-secondary-rgb: 107, 122, 153;
+  --bs-body-color: #1B2A5E;
+  --bs-border-color: #DCE5F5;
+  --bs-font-sans-serif: "Outfit", system-ui, sans-serif;
+}
+
+body { 
+  background: #E3EAF7; 
+}
+
+.serif { 
+  font-family: "Fraunces", Georgia, serif; 
+}
+
+.app { 
+  max-width: 480px; 
+  min-height: 100vh; 
+  margin: 0 auto; 
+  padding-bottom: 72px; 
+  background: #EEF4FD; 
+}
+
+.avatar { 
+  width: 56px; 
+  height: 56px; 
+  background: #E8EAF2; 
+}
+
+progress { 
+  height: 8px; 
+  accent-color: #1FA38A; 
+}
+
+.tabs { 
+  left: 50%; 
+  right: auto; 
+  width: 100%; 
+  max-width: 480px; 
+  transform: translateX(-50%); 
+}
+
+.tab { 
+  position: relative; 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  padding: .5rem 0; 
+  font-size: .72rem; 
+  color: #6B7A99; 
+  text-decoration: none; 
+}
+
+.tab i { 
+  font-size: 1.35rem; 
+  line-height: 1.2; 
+}
+
+.tab.activa { 
+  color: #1B2D6B; 
+  font-weight: 600; 
+}
+
+.tab.activa::before { 
+  content: ""; 
+  position: absolute; 
+  top: 0; 
+  left: 50%; 
+  width: 30px; 
+  height: 3px; 
+  transform: translateX(-50%); 
+  background: #F5C518; 
+  border-radius: 0 0 3px 3px; 
+}
