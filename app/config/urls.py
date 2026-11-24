@@ -31,4 +31,5 @@ urlpatterns = [
     path("gestionar-cursos/<int:curso_id>/modulos/", cursos.guardar_modulo, name="crear_modulo"),
     path("gestionar-modulos/<int:modulo_id>/lecciones/", cursos.guardar_leccion, name="crear_leccion"),
     path("panel/", panel.panel_movil, name="panel_movil"),
+    path("panel/perfil/", panel.perfil_movil, name="perfil_movil"),
 ]
