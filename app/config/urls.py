@@ -21,6 +21,7 @@ urlpatterns = [
     path("mis-cursos/", cursos.mis_cursos, name="mis_cursos"),
     path("cursos/<int:curso_id>/", cursos.detalle_curso, name="detalle_curso"),
     path("cursos/<int:curso_id>/certificado/", cursos.certificado_curso, name="certificado_curso"),
+    path("cursos/<int:curso_id>/certificado/descargar/", cursos.descargar_certificado, name="descargar_certificado"),
     path("cursos/<int:curso_id>/inscribirse/", cursos.inscribirse, name="inscribirse"),
     path("cursos/<int:curso_id>/cancelar/", cursos.cancelar_inscripcion, name="cancelar_inscripcion"),
     path("lecciones/<int:leccion_id>/completar/", cursos.completar_leccion, name="completar_leccion"),

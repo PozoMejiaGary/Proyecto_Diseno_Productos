@@ -1,15 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Q
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 
 from app.forms import CursoForm, LeccionForm, ModuloForm, ValoracionForm
 from app.modelo.curso import Curso, Leccion, Modulo
 from app.models import InscripcionCurso, ProgresoLeccion, Valoracion
+from app.servicios.certificadoPdf import generar_certificado_pdf
 
 
 def _anotar_progreso(curso, estudiante):
@@ -82,8 +84,8 @@ def detalle_curso(request, curso_id):
     return render(request, "detalle_curso.html", {"curso": curso, "inscrito": inscrito, "completadas": completadas, "form_valoracion": form_valoracion})
 
 
-@login_required
-def certificado_curso(request, curso_id):
+def _curso_certificable(request, curso_id):
+    """Devuelve el curso si el estudiante lo terminó; si no, avisa y devuelve None."""
     curso = get_object_or_404(Curso, pk=curso_id, ofrece_certificado=True)
     inscrito = InscripcionCurso.objects.filter(estudiante=request.user, curso=curso).exists()
     if not curso.publicado and not inscrito:
@@ -92,8 +94,27 @@ def certificado_curso(request, curso_id):
     completadas = ProgresoLeccion.objects.filter(estudiante=request.user, leccion__modulo__curso=curso).count()
     if not inscrito or total == 0 or completadas < total:
         messages.error(request, "Completa todas las lecciones para obtener tu certificado.")
-        return redirect("detalle_curso", curso_id=curso.pk)
+        return None
+    return curso
+
+
+@login_required
+def certificado_curso(request, curso_id):
+    curso = _curso_certificable(request, curso_id)
+    if curso is None:
+        return redirect("detalle_curso", curso_id=curso_id)
     return render(request, "certificado.html", {"curso": curso, "estudiante": request.user, "emitido_en": timezone.localdate()})
+
+
+@login_required
+def descargar_certificado(request, curso_id):
+    curso = _curso_certificable(request, curso_id)
+    if curso is None:
+        return redirect("detalle_curso", curso_id=curso_id)
+    pdf = generar_certificado_pdf(request.user, curso, timezone.localdate())
+    respuesta = HttpResponse(pdf, content_type="application/pdf")
+    respuesta["Content-Disposition"] = f'attachment; filename="certificado-{slugify(curso.nombre)}.pdf"'
+    return respuesta
 
 
 @login_required
@@ -222,5 +243,3 @@ def guardar_leccion(request, modulo_id):
         detalles_error = " ".join(f"{campo}: {', '.join(errores)}" for campo, errores in form.errors.items())
         messages.error(request, f"No se pudo agregar la lección. {detalles_error}")
     return redirect("gestionar_cursos")
-
-
