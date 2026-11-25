@@ -33,4 +33,6 @@ urlpatterns = [
     path("gestionar-modulos/<int:modulo_id>/lecciones/", cursos.guardar_leccion, name="crear_leccion"),
     path("panel/", panel.panel_movil, name="panel_movil"),
     path("panel/perfil/", panel.perfil_movil, name="perfil_movil"),
+    path("panel/cursos/", cursos.seccion_cursos, {"plantilla": "movil/cursosMovil.html"}, name="cursos_movil"),
+    path("panel/mis-cursos/", cursos.mis_cursos, {"plantilla": "movil/cursosMovil.html"}, name="mis_cursos_movil"),
 ]

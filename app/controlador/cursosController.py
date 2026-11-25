@@ -5,6 +5,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.text import slugify
 from django.views.decorators.http import require_POST
 
@@ -26,7 +27,15 @@ def _anotar_progreso(curso, estudiante):
     curso.estado_estudio = "Completado" if curso.completado else "En curso"
 
 
-def seccion_cursos(request):
+def _destino(request, por_defecto):
+    """Vuelve a la página indicada en 'next' (si es de este sitio) o a la ruta por defecto."""
+    siguiente = request.POST.get("next", "")
+    if siguiente and url_has_allowed_host_and_scheme(siguiente, allowed_hosts={request.get_host()}):
+        return siguiente
+    return reverse(por_defecto)
+
+
+def seccion_cursos(request, plantilla="cursos.html"):
     cursos = Curso.objects.filter(publicado=True).annotate(promedio=Avg("valoraciones__puntuacion"))
     busqueda = request.GET.get("q", "").strip()
     categoria = request.GET.get("categoria", "").strip()
@@ -52,7 +61,7 @@ def seccion_cursos(request):
             if curso.id_curso in inscritos:
                 _anotar_progreso(curso, request.user)
 
-    return render(request, "cursos.html", {
+    return render(request, plantilla, {
         "cursos": cursos, "categorias": Curso.objects.filter(publicado=True).values_list("categoria", flat=True).distinct().order_by("categoria"),
         "niveles": Curso.objects.filter(publicado=True).values_list("nivel", flat=True).distinct().order_by("nivel"),
         "categoria_actual": categoria, "nivel_actual": nivel, "duracion_actual": duracion,
@@ -61,11 +70,11 @@ def seccion_cursos(request):
 
 
 @login_required
-def mis_cursos(request):
+def mis_cursos(request, plantilla="cursos.html"):
     cursos = [i.curso for i in InscripcionCurso.objects.filter(estudiante=request.user).select_related("curso").order_by("curso__nombre")]
     for curso in cursos:
         _anotar_progreso(curso, request.user)
-    return render(request, "cursos.html", {"cursos": cursos, "inscritos": {c.id_curso for c in cursos}, "mis_cursos": True})
+    return render(request, plantilla, {"cursos": cursos, "inscritos": {c.id_curso for c in cursos}, "mis_cursos": True})
 
 
 def detalle_curso(request, curso_id):
@@ -131,7 +140,7 @@ def inscribirse(request, curso_id):
 def cancelar_inscripcion(request, curso_id):
     InscripcionCurso.objects.filter(estudiante=request.user, curso_id=curso_id).delete()
     messages.success(request, "Se quitó el curso de tu lista.")
-    return redirect("mis_cursos")
+    return redirect(_destino(request, "mis_cursos"))
 
 
 @login_required

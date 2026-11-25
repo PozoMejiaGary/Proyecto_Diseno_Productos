@@ -51,11 +51,11 @@
             <h2 class="small text-secondary fw-medium">Empieza a aprender</h2>
             <div class="bg-white rounded-4 shadow-sm p-3 mb-3">
                 <p class="small text-secondary">Aún no estás inscrito en ningún curso.</p>
-                <a href="{% url 'cursos' %}" class="btn bg-warning text-primary fw-semibold">Ver cursos</a>
+                <a href="{% url 'cursos_movil' %}" class="btn bg-warning text-primary fw-semibold">Ver cursos</a>
             </div>
         {% endif %}
 
-        <!-- talleres -->
+        <!--talleres-->
         {% if taller %}
             <div class="d-flex align-items-center gap-3 bg-warning-subtle border border-warning rounded-4 p-3 mb-3">
                 <i class="bi bi-calendar-event bg-warning text-primary fs-5 rounded-3 p-2"></i>
@@ -71,7 +71,7 @@
             </div>
         {% endif %}
 
-        <!-- ofertas personalidades -->
+        <!--ofertas-->
         <h2 class="small text-secondary fw-medium">Coincidencias para ti</h2>
         {% for oferta in ofertas %}
             <article class="d-flex justify-content-between align-items-center gap-3 bg-white rounded-4 shadow-sm p-3 mb-2">
@@ -92,8 +92,8 @@
     <!--opciones-->
     <nav class="tabs fixed-bottom d-flex bg-white border-top" aria-label="Navegación principal">
         <a href="{% url 'panel_movil' %}" class="tab activa"><i class="bi bi-house-door"></i>Inicio</a>
-        <a href="{% url 'cursos' %}" class="tab"><i class="bi bi-journal-bookmark"></i>Cursos</a>
-        <a href="{% url 'mis_cursos' %}" class="tab"><i class="bi bi-mortarboard"></i>Mis cursos</a>
+        <a href="{% url 'cursos_movil' %}" class="tab"><i class="bi bi-journal-bookmark"></i>Cursos</a>
+        <a href="{% url 'mis_cursos_movil' %}" class="tab"><i class="bi bi-mortarboard"></i>Mis cursos</a>
         <a href="{% url 'perfil_movil' %}" class="tab"><i class="bi bi-person"></i>Perfil</a>
     </nav>
 

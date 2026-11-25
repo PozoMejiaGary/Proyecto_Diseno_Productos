@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#1B2D6B">
+    <title>{% if mis_cursos %}Mis cursos{% else %}Cursos{% endif %} · Capacitaciones +</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/estilosMovil.css' %}">
+</head>
+<body>
+<div class="app">
+
+    <!--nav-->
+    <header class="sticky-top bg-primary d-flex justify-content-between align-items-center px-3 py-2">
+        <a href="{% url 'inicio' %}" class="serif bg-warning text-primary fw-bold rounded-2 px-3 py-1 text-decoration-none">Capacitaciones +</a>
+        <button type="button" class="btn btn-link text-white fs-4 p-1 lh-1" aria-label="Notificaciones"><i class="bi bi-bell"></i></button>
+    </header>
+
+    <main class="p-3">
+
+        {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+
+        <h1 class="serif h4 text-primary mb-1">{% if mis_cursos %}Mis cursos{% else %}Encuentra tu próximo curso{% endif %}</h1>
+        <p class="small text-secondary mb-3">Aprende a tu ritmo y lleva un seguimiento de tu avance.</p>
+
+        {% if not mis_cursos %}
+            <form method="get" action="{% url 'cursos_movil' %}" class="mb-3">
+                <div class="input-group mb-2">
+                    <input class="form-control" name="q" value="{{ busqueda }}" placeholder="Buscar por curso, tema o instructor" aria-label="Buscar curso">
+                    <button class="btn bg-warning text-primary" type="submit" aria-label="Buscar"><i class="bi bi-search"></i></button>
+                </div>
+                <details {% if categoria_actual or nivel_actual or duracion_actual %}open{% endif %}>
+                    <summary class="small fw-medium text-primary">Filtros</summary>
+                    <div class="d-grid gap-2 mt-2">
+                        <select class="form-select" name="categoria" aria-label="Categoría">
+                            <option value="">Todas las áreas</option>
+                            {% for item in categorias %}<option value="{{ item }}" {% if categoria_actual == item %}selected{% endif %}>{{ item }}</option>{% endfor %}
+                        </select>
+                        <select class="form-select" name="nivel" aria-label="Nivel">
+                            <option value="">Todos los niveles</option>
+                            {% for item in niveles %}<option value="{{ item }}" {% if nivel_actual == item %}selected{% endif %}>{{ item }}</option>{% endfor %}
+                        </select>
+                        <select class="form-select" name="duracion" aria-label="Duración">
+                            <option value="">Cualquier duración</option>
+                            <option value="corto" {% if duracion_actual == 'corto' %}selected{% endif %}>Hasta 8 horas</option>
+                            <option value="medio" {% if duracion_actual == 'medio' %}selected{% endif %}>9 a 20 horas</option>
+                            <option value="largo" {% if duracion_actual == 'largo' %}selected{% endif %}>Más de 20 horas</option>
+                        </select>
+                        <button class="btn bg-primary text-white fw-semibold" type="submit">Aplicar filtros</button>
+                    </div>
+                </details>
+            </form>
+            <p class="small text-secondary">
+                {{ cursos|length }} curso{{ cursos|length|pluralize }} encontrado{{ cursos|length|pluralize }}
+                {% if busqueda or categoria_actual or nivel_actual or duracion_actual %} · <a href="{% url 'cursos_movil' %}">Limpiar filtros</a>{% endif %}
+            </p>
+        {% endif %}
+
+        <!--cursos-->
+        {% for curso in cursos %}
+            <article class="bg-white rounded-4 shadow-sm overflow-hidden mb-3">
+                {% if curso.url_imagen %}
+                    <div class="ratio ratio-16x9"><img src="{{ curso.url_imagen }}" alt="Imagen de {{ curso.nombre }}" class="object-fit-cover"></div>
+                {% endif %}
+                <div class="p-3">
+                    <span class="badge bg-warning text-primary">{{ curso.categoria }}</span>
+                    <small class="text-secondary ms-1">{{ curso.nivel }} · {{ curso.duracion_horas }} horas</small>
+                    <h2 class="h6 text-primary fw-semibold mt-2 mb-1">{{ curso.nombre }}</h2>
+                    <p class="small text-secondary">{{ curso.descripcion|truncatewords:18 }}</p>
+
+                    {% if mis_cursos or curso.id_curso in inscritos %}
+                        <small class="d-block text-secondary mb-1">{{ curso.lecciones_completadas }}/{{ curso.total_lecciones }} lecciones · {{ curso.progreso }}%</small>
+                        <progress class="w-100 mb-3" value="{{ curso.progreso }}" max="100">{{ curso.progreso }}%</progress>
+                    {% endif %}
+
+                    <a href="{% url 'detalle_curso' curso.id_curso %}" class="btn bg-warning text-primary fw-semibold w-100">{% if mis_cursos or curso.id_curso in inscritos %}Continuar curso{% else %}Ver curso{% endif %}</a>
+
+                    {% if mis_cursos %}
+                        {% if curso.completado and curso.ofrece_certificado %}
+                            <div class="d-flex gap-2 mt-2">
+                                <a href="{% url 'certificado_curso' curso.id_curso %}" class="btn btn-outline-success btn-sm flex-fill">Ver certificado</a>
+                                <a href="{% url 'descargar_certificado' curso.id_curso %}" class="btn btn-success btn-sm flex-fill">Descargar PDF</a>
+                            </div>
+                        {% endif %}
+                        <form method="post" action="{% url 'cancelar_inscripcion' curso.id_curso %}" class="mt-2 text-center">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'mis_cursos_movil' %}">
+                            <button type="submit" class="btn btn-link btn-sm text-danger" onclick="return confirm('¿Quieres quitar este curso de Mis cursos?')">Quitar de mis cursos</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </article>
+        {% empty %}
+            <div class="bg-white rounded-4 shadow-sm p-3">
+                <p class="small text-secondary">{% if mis_cursos %}Todavía no te has inscrito en ningún curso.{% else %}No encontramos cursos con esos filtros.{% endif %}</p>
+                {% if mis_cursos %}
+                    <a href="{% url 'cursos_movil' %}" class="btn bg-warning text-primary fw-semibold">Explorar cursos</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+    </main>
+
+    <!--opciones-->
+    <nav class="tabs fixed-bottom d-flex bg-white border-top" aria-label="Navegación principal">
+        <a href="{% url 'panel_movil' %}" class="tab"><i class="bi bi-house-door"></i>Inicio</a>
+        <a href="{% url 'cursos_movil' %}" class="tab {% if not mis_cursos %}activa{% endif %}"><i class="bi bi-journal-bookmark"></i>Cursos</a>
+        <a href="{% url 'mis_cursos_movil' %}" class="tab {% if mis_cursos %}activa{% endif %}"><i class="bi bi-mortarboard"></i>Mis cursos</a>
+        <a href="{% url 'perfil_movil' %}" class="tab"><i class="bi bi-person"></i>Perfil</a>
+    </nav>
+
+</div>
+</body>
+</html>
